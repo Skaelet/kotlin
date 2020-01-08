@@ -36,7 +36,11 @@ class AsyncStackTraceContext(
     fun getAsyncStackTraceIfAny() : List<CoroutineAsyncStackFrameItem> {
         val continuation = locateContinuation() ?: return emptyList()
         val frames = mutableListOf<CoroutineAsyncStackFrameItem>()
-        collectFramesRecursively(continuation, frames)
+        try {
+            collectFramesRecursively(continuation, frames)
+        } catch (e: Exception) {
+            log.error("Error while looking for variables.", e)
+        }
         return frames
     }
 
@@ -70,7 +74,7 @@ class AsyncStackTraceContext(
         val continuationType = continuation.referenceType() as? ClassType ?: return
         val baseContinuationSupertype = findBaseContinuationSuperSupertype(continuationType) ?: return
 
-        val location = createLocation(continuation)
+        val location = createLocation(continuation) ?: return
         val spilledVariables = getSpilledVariables(continuation) ?: emptyList()
 
         location?.let {
