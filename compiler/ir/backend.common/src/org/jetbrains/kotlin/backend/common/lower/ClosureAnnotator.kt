@@ -119,7 +119,6 @@ class ClosureAnnotator(irFile: IrFile) {
                 (arg as? IrTypeProjection)?.let { seeType(arg.type) }
             }
             type.abbreviation?.let { abbreviation ->
-                // TODO: do we need to do anything about type abbreviation symbols?
                 for (arg in abbreviation.arguments) {
                     (arg as? IrTypeProjection)?.let { seeType(arg.type) }
                 }
@@ -223,12 +222,12 @@ class ClosureAnnotator(irFile: IrFile) {
 
         override fun visitExpression(expression: IrExpression) {
             super.visitExpression(expression)
-            val typeParameterContainerScopeBuiler = closuresStack.peek()?.let {
+            val typeParameterContainerScopeBuilder = closuresStack.peek()?.let {
                 if (it.owner is IrConstructor) {
                     closuresStack[closuresStack.size - 2]
                 } else it
             }
-            typeParameterContainerScopeBuiler?.seeType(expression.type)
+            typeParameterContainerScopeBuilder?.seeType(expression.type)
         }
 
         private fun processMemberAccess(declaration: IrDeclaration) {

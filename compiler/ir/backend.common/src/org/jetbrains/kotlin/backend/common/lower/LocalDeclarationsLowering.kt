@@ -197,7 +197,7 @@ class LocalDeclarationsLowering(
 
     private fun LocalContext.remapTypeAbbreviation(abbreviation: IrTypeAbbreviation): IrTypeAbbreviation =
         IrTypeAbbreviationImpl(
-            abbreviation.typeAlias,         // !!!!!! TODO: do we need to remap type alias?
+            abbreviation.typeAlias,         // TODO: if/when the language gets local or nested type aliases, this will need remapping.
             abbreviation.hasQuestionMark,
             abbreviation.arguments.map { remapTypeArgument(it) },
             abbreviation.annotations
